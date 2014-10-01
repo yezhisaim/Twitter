@@ -1,8 +1,6 @@
 Twitter
 =======
 
-# Twitter Demo
-
 This is twitter iOS application that allows a user to login(login information persists across sessions), view the tweets from their home feed and additionally, allows users to tweet, reply, retweet and favorite tweets.
 
 Time spent: 23 hours spent in total
