@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol TweetTableViewCellDelegate {
+    func onTap(#tweetCell: TweetTableViewCell)
+}
+
 class TweetTableViewCell: UITableViewCell {
 
     
@@ -21,6 +25,10 @@ class TweetTableViewCell: UITableViewCell {
     @IBOutlet weak var timeStampLabel: UILabel!
     @IBOutlet weak var handleLabel: UILabel!
     
+    var delegate: TweetTableViewCellDelegate?
+    
+    var viewControllers: [UIViewController]?
+    
     var tweet: Tweet!
     {
         willSet(tweet){
@@ -31,13 +39,14 @@ class TweetTableViewCell: UITableViewCell {
             self.profilePicture.setImageWithURL(NSURL(string: profile_pic as String!))
             self.profilePicture.clipsToBounds = true;
             self.profilePicture.layer.cornerRadius = 7
+            
+            self.profilePicture.userInteractionEnabled = true
            }
-            
-            
             self.handleLabel.text = tweet?.user?.screenname
             self.timeStampLabel.text = tweet?.twitterTimeStampString
         }
     }
+    
     
     @IBAction func onRetweet(sender: AnyObject) {
 
@@ -53,6 +62,14 @@ class TweetTableViewCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        var tap = UITapGestureRecognizer(target: self, action: "onTap")
+        tap.numberOfTapsRequired = 1
+        tap.numberOfTouchesRequired = 1
+        self.profilePicture.addGestureRecognizer(tap)
+    }
+    
+    func onTap() {
+        delegate?.onTap(tweetCell: self)
     }
 
     override func setSelected(selected: Bool, animated: Bool) {

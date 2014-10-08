@@ -11,7 +11,7 @@ import Foundation
 var _currentUser: User?
 let currentUserKey = "kCurrentUserKey"
 let userDidLoginNotification = "userDidLoginNotification"
-let userDidLogoutNotification = "userDidLogoutNotification"
+//let userDidLogoutNotification = "userDidLogoutNotification"
 
 class User: NSObject {
     
@@ -19,7 +19,11 @@ class User: NSObject {
     var name: String?
     var screenname: String?
     var profileImageURL: String?
+    var profileBGImageURL: String?
     var tagline: String?
+    var numTweets: UInt?
+    var numFollowing: UInt?
+    var numFollowers: UInt?
     
     init(dictionary: NSDictionary) {
         
@@ -30,14 +34,18 @@ class User: NSObject {
         let handle = dictionary["screen_name"] as? String
         self.screenname =  "\(atString)\(handle!)"
         self.profileImageURL = dictionary["profile_image_url"] as? String
+        self.profileBGImageURL = dictionary["profile_banner_url"] as? String
         self.tagline = dictionary["description"] as? String
+        self.numFollowing = dictionary["followers_count"] as? NSNumber
+        self.numFollowers = dictionary["friends_count"] as? NSNumber
+        self.numTweets = dictionary["statuses_count"] as? NSNumber
     }
     
-    func logout() {
+/*    func logout() {
         User.currentUser = nil
         TwitterClient.sharedInstance.requestSerializer.removeAccessToken()
         NSNotificationCenter.defaultCenter().postNotificationName(userDidLogoutNotification, object: nil)
-    }
+    }*/
     
     class var currentUser: User? {
         

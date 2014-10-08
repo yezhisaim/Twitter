@@ -20,16 +20,19 @@ PODS:
   - AFNetworking/UIKit (2.4.1):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - AMSlideMenu (1.5.3)
   - BDBOAuth1Manager (1.4.0):
     - AFNetworking/NSURLConnection (~> 2.4.0)
     - AFNetworking/NSURLSession (~> 2.4.0)
 
 DEPENDENCIES:
   - AFNetworking
+  - AMSlideMenu (~> 1.5.3)
   - BDBOAuth1Manager
 
 SPEC CHECKSUMS:
   AFNetworking: 0aabc6fae66d6e5d039eeb21c315843c7aae51ab
+  AMSlideMenu: ab0c9313c74eac61e360d2a714d2d8202f6de916
   BDBOAuth1Manager: 4f0967110286edd4c7961cf48a4eb242c64137a1
 
 COCOAPODS: 0.34.1

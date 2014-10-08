@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TweetsTableViewController: UITableViewController, UITableViewDataSource {
+class TweetsTableViewController: UITableViewController, UITableViewDataSource, UIGestureRecognizerDelegate {
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -16,14 +16,15 @@ class TweetsTableViewController: UITableViewController, UITableViewDataSource {
     
     var tweets: [Tweet]?
     var user: User?
+    var viewMode: String?
     
-    
-    @IBAction func onLogout(sender: AnyObject) {
+  /*  @IBAction func onLogout(sender: AnyObject) {
         User.currentUser?.logout()
-    }
+    }*/
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.navigationController?.navigationBar.barTintColor = UIColor(red: 208/255, green: 246/255, blue: 255/255, alpha: 1.0)
         
         self.refreshControl = UIRefreshControl()
@@ -34,18 +35,28 @@ class TweetsTableViewController: UITableViewController, UITableViewDataSource {
         tableView.delegate = self
         tableView.dataSource = self
         
-        TwitterClient.sharedInstance.homeTimeLineWithParams(nil, completion: { (tweets, error) -> () in
-            self.tweets = tweets
-            self.tableView.reloadData()
-        })
+        if(self.viewMode == "Mentions")
+        {
+            TwitterClient.sharedInstance.mentionsWithParams(nil, completion: { (tweets, error) -> () in
+                self.tweets = tweets
+                println(tweets)
+                self.tableView.reloadData()
+            })
+        }
+        else
+        {
+            TwitterClient.sharedInstance.homeTimeLineWithParams(nil, completion: { (tweets, error) -> () in
+                self.tweets = tweets
+                self.tableView.reloadData()
+            })
+        }
         
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
-    
+
+    func onTap(recognizer: UITapGestureRecognizer) {
+        performSegueWithIdentifier("profileImageSegue", sender: self)
+    }
+  
     func refreshView(refreshControl: UIRefreshControl)
     {
         
@@ -72,18 +83,21 @@ class TweetsTableViewController: UITableViewController, UITableViewDataSource {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-        return 20
+        return self.tweets?.count ?? 0
     }
 
    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("TweetTableViewCell", forIndexPath: indexPath) as TweetTableViewCell
     
-        // Configure the cell...
+        var tapGestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("onTap:"))
+        cell.profilePicture.tag = indexPath.row
+        tapGestureRecognizer.delegate = self
+        cell.profilePicture.addGestureRecognizer(tapGestureRecognizer)
+    
         var tweet = self.tweets?[indexPath.row]
         cell.tweet = tweet
         return cell
     }
-    
 
     /*
     // Override to support conditional editing of the table view.
@@ -145,6 +159,17 @@ class TweetsTableViewController: UITableViewController, UITableViewDataSource {
                     detailedVC.tweet = self.tweets?[indexPath!]
                 }
             }
+        if (segue.identifier == "profileImageSegue") {
+            println("Profile page!")
+            var nav = segue.destinationViewController as UINavigationController
+            if nav.viewControllers[0] is ContentViewController {
+                var contentVC = nav.viewControllers[0] as ContentViewController
+                let indexPath = self.tableView.indexPathForSelectedRow()?.row
+                contentVC.user = User.currentUser?
+            }
+        }
+
+        
     }
     
 
