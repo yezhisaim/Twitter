@@ -31,10 +31,12 @@ Completed user stories[Assignment 4]:
 Walkthrough of all user stories:
 
 Assignment 3
+
 ![Video Walkthrough](https://github.com/yezhisaim/Twitter/blob/master/twitterDemo.gif)
 
 
 Assignment 4
+
 ![Video Walkthrough](https://github.com/yezhisaim/Twitter/blob/master/twitterHBDemo.gif)
 
 
